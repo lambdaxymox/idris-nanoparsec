@@ -1,0 +1,4 @@
+package NanoParsec
+
+modules = NanoParsec
+        , NanoParsec.Parser
