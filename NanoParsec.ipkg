@@ -3,3 +3,6 @@ package NanoParsec
 modules = NanoParsec
         , NanoParsec.Parser
         , NanoParsec.Combinators
+
+tests   = Test.Test.testListOf1
+        , Test.Test.testListOf2

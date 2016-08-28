@@ -55,6 +55,7 @@ implementation Alternative Parser where
     empty = failure
     (<|>) = option
 
+||| Extract at least one success.
 some : (Alternative f, Applicative f) => f a -> f (List a)
 some v = some_v
     where
@@ -66,6 +67,7 @@ some v = some_v
             many_v = some_v <|> pure []
 
 
+||| Extracts 0 or more successes.
 many : (Alternative f, Applicative f) => f a -> f (List a)
 many v = many_v
     where
@@ -75,3 +77,12 @@ many v = many_v
 
             some_v : f (List a)
             some_v = (map (::) v) <*> many_v
+
+sepBy1 : Parser a -> Parser sep -> Parser (List a)
+sepBy1 p sep = do
+    first     <- p
+    remainder <- many (sep >>= \_ => p)
+    return (first :: remainder)
+
+sepBy : Parser a -> Parser sep -> Parser (list a)
+sepBy p sep = (p `sepBy1` sep) <|> pure List.Nil
