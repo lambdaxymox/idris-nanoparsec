@@ -45,3 +45,11 @@ option p1 p2 = MkParser $ \st =>
 
 satisfy : (Char -> Bool) -> Parser Char
 satisfy pred = item >>= \ch => if (pred ch) then (pure ch) else failure
+
+implementation MonadPlus Parser where
+    mzero = failure
+    mplus = option
+
+implementation Alternative Parser where
+    empty = mzero
+    (<|>) = option
