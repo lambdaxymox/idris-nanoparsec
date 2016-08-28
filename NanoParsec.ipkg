@@ -2,3 +2,4 @@ package NanoParsec
 
 modules = NanoParsec
         , NanoParsec.Parser
+        , NanoParsec.Combinators

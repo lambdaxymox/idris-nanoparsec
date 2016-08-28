@@ -2,6 +2,7 @@ module NanoParsec.Parser
 
 import NanoParsec.MonadPlus
 
+%access export
 
 record Parser a where
     constructor MkParser
@@ -44,12 +45,33 @@ option p1 p2 = MkParser $ \st =>
         res => res
 
 satisfy : (Char -> Bool) -> Parser Char
-satisfy pred = item >>= \ch => if (pred ch) then (pure ch) else failure
+satisfy pred = item >>= \ch => if (pred ch) then (return ch) else failure
 
 implementation MonadPlus Parser where
     mzero = failure
     mplus = option
 
 implementation Alternative Parser where
-    empty = mzero
+    empty = failure
     (<|>) = option
+
+some : (Alternative f, Applicative f) => f a -> f (List a)
+some v = some_v
+    where
+        mutual
+            some_v : f (List a)
+            some_v = (map (::) v) <*> many_v
+
+            many_v : f (List a)
+            many_v = some_v <|> pure []
+
+
+many : (Alternative f, Applicative f) => f a -> f (List a)
+many v = many_v
+    where
+        mutual
+            many_v : f (List a)
+            many_v = some_v <|> pure []
+
+            some_v : f (List a)
+            some_v = (map (::) v) <*> many_v
