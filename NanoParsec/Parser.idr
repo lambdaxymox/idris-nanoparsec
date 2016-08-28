@@ -1,5 +1,7 @@
 module NanoParsec.Parser
 
+import NanoParsec.MonadPlus
+
 
 record Parser a where
     constructor MkParser
